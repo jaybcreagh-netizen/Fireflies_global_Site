@@ -247,6 +247,7 @@ body.no-scroll { overflow: hidden; }
 .mobile-nav.is-open .nav-links li:nth-child(2) { transition-delay: 0.2s; }
 .mobile-nav.is-open .nav-links li:nth-child(3) { transition-delay: 0.3s; }
 .mobile-nav.is-open .nav-links li:nth-child(4) { transition-delay: 0.4s; }
+.mobile-nav.is-open .nav-links li:nth-child(5) { transition-delay: 0.5s; }
 .mobile-nav .nav-links a {
     font-size: 1.6rem;
     letter-spacing: 2px;
@@ -586,7 +587,54 @@ body.no-scroll { overflow: hidden; }
     transform: translateX(8px);
 }
 
-/* --- 9. Footer & Utility --- */
+/* --- 9. Contact Section --- */
+.contact-section {
+    background: linear-gradient(180deg, var(--light-grey-bg) 0%, #fff 100%);
+}
+.contact-wrapper {
+    max-width: 700px;
+    margin: 0 auto;
+}
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+.form-group {
+    width: 100%;
+}
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 18px 20px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    background: var(--white);
+    transition: all 0.3s var(--transition-smooth);
+}
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent-yellow);
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+}
+.form-group textarea {
+    resize: vertical;
+    min-height: 150px;
+}
+.contact-form .btn {
+    align-self: flex-start;
+    min-width: 200px;
+}
+
+/* --- 10. Footer & Utility --- */
 .footer { background-color: #111; color: #a0a0a0; padding: 60px 0; text-align: center; }
 .footer-logo img { height: 70px; filter: invert(1) opacity(0.8); margin-bottom: 20px; }
 .footer-links { list-style: none; display: flex; justify-content: center; gap: 30px; margin-bottom: 30px; }
@@ -609,19 +657,79 @@ body.no-scroll { overflow: hidden; }
 .modal p { margin-bottom: 10px; }
 
 /* --- 10. Responsive Design --- */
-@media (max-width: 992px) {
-    .story-grid { grid-template-columns: 1fr; }
-    .story-image { order: -1; margin-bottom: 40px; }
+
+/* Tablet - 769px to 992px */
+@media (max-width: 992px) and (min-width: 769px) {
+    .rides-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 35px;
+    }
+    .news-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
+
+/* Tablet and below - max 992px */
+@media (max-width: 992px) {
+    .story-grid {
+        grid-template-columns: 1fr;
+        gap: 50px;
+    }
+    .story-image {
+        order: -1;
+        margin-bottom: 0;
+    }
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+/* Mobile - max 768px */
 @media (max-width: 768px) {
     .section { padding: 60px 0; }
-    .section-header h2 { font-size: 2.8rem; }
+    .section-header h2 { font-size: 2.5rem; }
+    .section-header p { font-size: 1rem; }
+
+    /* Navigation */
     .desktop-nav { display: none; }
     .hamburger { display: block; }
-    .rides-grid, .news-grid { grid-template-columns: 1fr; }
-    .ride-card-content p { min-height: auto; margin-bottom: 25px; }
-    .ride-card .btn-secondary { position: relative; bottom: auto; left: auto; transform: none; opacity: 1; }
-    .footer-links { flex-direction: column; gap: 15px; }
+
+    /* Grids */
+    .rides-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    .news-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    /* Ride Cards */
+    .ride-card-content p {
+        min-height: auto;
+        margin-bottom: 25px;
+    }
+    .ride-card .btn-secondary {
+        opacity: 1;
+        transform: none;
+    }
+
+    /* Footer */
+    .footer-links {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    /* Hero */
+    .hero-content h1 {
+        font-size: clamp(2.5rem, 10vw, 4rem);
+    }
+
+    /* Contact Form */
+    .contact-form .btn {
+        width: 100%;
+    }
 }
         
 /* --- Animation Classes --- */
