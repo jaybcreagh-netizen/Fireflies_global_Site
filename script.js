@@ -194,12 +194,25 @@ document.addEventListener('DOMContentLoaded', () => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const img = entry.target;
-                img.style.opacity = '0';
-                img.style.transition = 'opacity 0.5s ease';
 
-                img.onload = () => {
+                // Don't set opacity initially - let CSS handle it
+                if (img.complete) {
+                    // Image already loaded
                     img.style.opacity = '1';
-                };
+                } else {
+                    img.style.opacity = '0';
+                    img.style.transition = 'opacity 0.5s ease';
+
+                    img.onload = () => {
+                        img.style.opacity = '1';
+                    };
+
+                    img.onerror = () => {
+                        // If image fails to load, still show it (browser will show broken image icon)
+                        img.style.opacity = '1';
+                        console.error('Failed to load image:', img.src);
+                    };
+                }
 
                 observer.unobserve(img);
             }
