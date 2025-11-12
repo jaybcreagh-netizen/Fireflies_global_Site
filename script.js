@@ -99,28 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         counterObserver.observe(counter);
     }
 
-    // --- 5. News Modal ---
-    const modal = document.getElementById('news-modal');
-    const modalCloseBtn = document.querySelector('.modal-close');
-    const readMoreLinks = document.querySelectorAll('.read-more-link');
-    
-    readMoreLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            modal.classList.add('is-open');
-            document.body.classList.add('no-scroll');
-        });
-    });
-
-    const closeModal = () => {
-        modal.classList.remove('is-open');
-        document.body.classList.remove('no-scroll');
-    }
-    if(modal) {
-        modalCloseBtn.addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-    }
-
-    // --- 6. Back to Top Button ---
+    // --- 5. Back to Top Button ---
     const backToTopButton = document.querySelector('.back-to-top');
     if (backToTopButton) {
         window.addEventListener('scroll', () => {
@@ -131,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 7. Enhanced Hero Parallax Effect ---
+    // --- 6. Enhanced Hero Parallax Effect ---
     const heroBackground = document.querySelector('.hero-background');
     if (heroBackground) {
         let ticking = false;
@@ -148,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 8. Smooth Scroll for Navigation Links ---
+    // --- 7. Smooth Scroll for Navigation Links ---
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -166,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- 9. Card Tilt Effect (Subtle 3D) ---
+    // --- 8. Card Tilt Effect (Subtle 3D) ---
     const cards = document.querySelectorAll('.ride-card, .news-card');
     cards.forEach(card => {
         card.addEventListener('mousemove', (e) => {
@@ -188,40 +167,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- 10. Lazy Loading for Images ---
-    const images = document.querySelectorAll('img[src]');
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-
-                // Don't set opacity initially - let CSS handle it
-                if (img.complete) {
-                    // Image already loaded
-                    img.style.opacity = '1';
-                } else {
-                    img.style.opacity = '0';
-                    img.style.transition = 'opacity 0.5s ease';
-
-                    img.onload = () => {
-                        img.style.opacity = '1';
-                    };
-
-                    img.onerror = () => {
-                        // If image fails to load, still show it (browser will show broken image icon)
-                        img.style.opacity = '1';
-                        console.error('Failed to load image:', img.src);
-                    };
+    // --- 9. Lazy Loading for Images ---
+    const lazyImages = document.querySelectorAll('img[data-src]');
+    if (lazyImages.length > 0) {
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    if (img.dataset.src) {
+                        img.src = img.dataset.src;
+                        img.removeAttribute('data-src');
+                    }
+                    observer.unobserve(img);
                 }
+            });
+        }, { rootMargin: '50px' });
 
-                observer.unobserve(img);
-            }
-        });
-    });
+        lazyImages.forEach(img => imageObserver.observe(img));
+    }
 
-    images.forEach(img => imageObserver.observe(img));
-
-    // --- 11. Add Magnetic Effect to Buttons (excluding ride card buttons) ---
+    // --- 10. Add Magnetic Effect to Buttons (excluding ride card buttons) ---
     const buttons = document.querySelectorAll('.btn:not(.ride-card .btn)');
     buttons.forEach(button => {
         button.addEventListener('mousemove', (e) => {
@@ -237,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- 12. Add Progress Bar on Scroll ---
+    // --- 11. Add Progress Bar on Scroll ---
     const progressBar = document.createElement('div');
     progressBar.style.cssText = `
         position: fixed;
@@ -255,6 +220,47 @@ document.addEventListener('DOMContentLoaded', () => {
         const scrolled = (window.scrollY / windowHeight) * 100;
         progressBar.style.width = scrolled + '%';
     });
+
+    // --- 12. Dynamic News Loading ---
+    const newsGrid = document.querySelector('.news-grid');
+    if (newsGrid) {
+        fetch('news.json')
+            .then(response => response.json())
+            .then(data => {
+                // Clear existing news cards
+                newsGrid.innerHTML = '';
+
+                // Create news cards from JSON data
+                data.news.forEach((newsItem, index) => {
+                    const newsCard = document.createElement('div');
+                    newsCard.className = 'news-card reveal';
+
+                    newsCard.innerHTML = `
+                        <div class="news-card-image">
+                            <img src="${newsItem.image}" alt="${newsItem.title}">
+                        </div>
+                        <div class="news-card-content">
+                            <span class="news-card-tag">${newsItem.tag}</span>
+                            <h3>${newsItem.title}</h3>
+                            <a href="${newsItem.link}" target="_blank" class="read-more-link">
+                                Read More <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    `;
+
+                    newsGrid.appendChild(newsCard);
+
+                    // Add reveal animation with staggered delay
+                    setTimeout(() => {
+                        newsCard.classList.add('active');
+                    }, index * 100);
+                });
+            })
+            .catch(error => {
+                console.error('Error loading news:', error);
+                // Keep existing hardcoded news as fallback
+            });
+    }
 
     // --- 13. Contact Form Handler ---
     const contactForm = document.getElementById('contact-form');

@@ -1,0 +1,31 @@
+{
+  "news": [
+    {
+      "id": 1,
+      "title": "Patagonia 2026: Registration Opens",
+      "tag": "ANNOUNCEMENT",
+      "excerpt": "Join us for the next adventure through the wild frontier of Patagonia. Registration is now open for the 2026 edition.",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZDm2Pr_SSAWSF7r_biqxEY9YXSVCsCW6Ffg&s",
+      "link": "https://www.firefliespatagonia.com/",
+      "date": "2025-01-15"
+    },
+    {
+      "id": 2,
+      "title": "Europe 2025 Applications Closed",
+      "tag": "TOUR UPDATE",
+      "excerpt": "Applications for the 2025 European Tour have now closed. Thank you to everyone who applied. We'll see you on the roads of the Alps!",
+      "image": "https://d3q27bh1u24u2o.cloudfront.net/django-summernote/2024-11-25/37a5db01-1f30-45ae-b564-7126d1eb8171.png",
+      "link": "https://thefirefliestour.com/",
+      "date": "2024-12-20"
+    },
+    {
+      "id": 3,
+      "title": "Recap: Fireflies West 2024",
+      "tag": "RIDE RECAP",
+      "excerpt": "Relive the incredible journey from San Francisco to LA. Over 100 riders, 500+ miles, and thousands raised for City of Hope.",
+      "image": "https://assets.classy.org/1277354/77612ba0-6a32-11ea-9cfe-0e0c11758269.png",
+      "link": "https://www.fireflieswest.com/",
+      "date": "2024-11-30"
+    }
+  ]
+}
