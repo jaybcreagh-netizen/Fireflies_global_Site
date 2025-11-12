@@ -269,7 +269,7 @@ body.no-scroll { overflow: hidden; }
     left: 0;
     width: 100%;
     height: 115%;
-    background: url('https://previews.dropbox.com/p/thumb/ACzo5OK8dEwZ_DbusY84Hj2GIuQl5tbdLADRPAN3Bxs_xRzGmN6aVYs6HW2B0nEhD4FW5f-LPyIoUvQkpUM--bv6XO2UWf45SdWkpkNJk5Z_JCw28YfUoRkQcv0Hk7fkpN6YQ8lQmkLAVR5er0-PWtHeRab2eT9RRyD0i6TrJNx-p37YcqkdkBrxDU_opkBbFiiE4rjA7zL3pcoius9oGpIJoARzterlWrAe_qnu1ukOlHQLny0te4xSp0gXjJqU6f2Dfgv1ha4uhdTTblJkjdpBx0vwb9FaHuAcEaqyizlJCDiFY2b_PADAu4kMpLUlxww/p.jpeg') no-repeat center center/cover;
+    background: url('images/Header_Global.jpg') no-repeat center center/cover;
     z-index: 0;
     animation: slowZoom 20s ease-in-out infinite alternate;
 }
@@ -380,7 +380,7 @@ body.no-scroll { overflow: hidden; }
 }
 .rides-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 45px;
 }
 .ride-card {
