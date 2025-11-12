@@ -221,8 +221,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     images.forEach(img => imageObserver.observe(img));
 
-    // --- 11. Add Magnetic Effect to Buttons ---
-    const buttons = document.querySelectorAll('.btn');
+    // --- 11. Add Magnetic Effect to Buttons (excluding ride card buttons) ---
+    const buttons = document.querySelectorAll('.btn:not(.ride-card .btn)');
     buttons.forEach(button => {
         button.addEventListener('mousemove', (e) => {
             const rect = button.getBoundingClientRect();
