@@ -1,47 +1,71 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Loading Screen ---
+    const loadingScreen = document.querySelector('.loading-screen');
+    if (loadingScreen) {
+        setTimeout(() => {
+            loadingScreen.classList.add('fade-out');
+            setTimeout(() => loadingScreen.remove(), 500);
+        }, 1000);
+    }
+
     // --- 1. Header Scroll Effect ---
     const header = document.querySelector('.header');
+    let lastScroll = 0;
+
     window.addEventListener('scroll', () => {
-        header.classList.toggle('scrolled', window.scrollY > 50);
+        const currentScroll = window.scrollY;
+
+        // Add/remove scrolled class
+        header.classList.toggle('scrolled', currentScroll > 50);
+
+        // Optional: Hide header on scroll down, show on scroll up
+        if (currentScroll > lastScroll && currentScroll > 100) {
+            header.style.transform = 'translateY(-100%)';
+        } else {
+            header.style.transform = 'translateY(0)';
+        }
+
+        lastScroll = currentScroll;
     });
 
-    // --- 2. Mobile Navigation ---
+    // --- 2. Mobile Navigation with Hamburger Animation ---
     const hamburger = document.querySelector('.hamburger');
     const mobileNav = document.querySelector('.mobile-nav');
     const mobileNavLinks = document.querySelectorAll('.mobile-nav .nav-links a');
-    
-    hamburger.addEventListener('click', () => {
-        mobileNav.classList.toggle('is-open');
-        document.body.classList.toggle('no-scroll');
-    });
 
-    mobileNavLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            mobileNav.classList.remove('is-open');
-            document.body.classList.remove('no-scroll');
+    if (hamburger && mobileNav) {
+        hamburger.addEventListener('click', () => {
+            mobileNav.classList.toggle('is-open');
+            document.body.classList.toggle('no-scroll');
+            hamburger.classList.toggle('is-active');
         });
-    });
 
-    // --- 3. Reveal on Scroll (Staggered) ---
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileNav.classList.remove('is-open');
+                document.body.classList.remove('no-scroll');
+                hamburger.classList.remove('is-active');
+            });
+        });
+    }
+
+    // --- 3. Enhanced Reveal on Scroll (Staggered) ---
     const revealElements = document.querySelectorAll('.reveal');
     const revealObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
+        entries.forEach((entry, index) => {
             if (entry.isIntersecting) {
-                const children = entry.target.querySelectorAll('.reveal');
-                if(children.length > 0) {
-                    children.forEach((child, index) => {
-                        setTimeout(() => child.classList.add('active'), index * 150);
-                    });
-                } else {
+                // Add staggered delay based on index
+                setTimeout(() => {
                     entry.target.classList.add('active');
-                }
+                }, index * 100);
                 observer.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
     revealElements.forEach(elem => revealObserver.observe(elem));
 
-    // --- 4. Impact Number Counter ---
+    // --- 4. Enhanced Impact Number Counter ---
     const counter = document.querySelector('.impact-figure');
     if (counter) {
         const counterObserver = new IntersectionObserver((entries, observer) => {
@@ -49,20 +73,27 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!entry.isIntersecting) return;
 
             const target = +counter.getAttribute('data-target-number');
-            const duration = 2000;
-            
-            let current = 0;
-            const step = () => {
-                const increment = Math.ceil(target / (duration / 20)); // Animate in ~20 steps
-                current += increment;
-                if (current >= target) {
-                    counter.innerText = '$' + target.toLocaleString();
+            const duration = 2500;
+            const startTime = Date.now();
+
+            const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
+
+            const updateCounter = () => {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easedProgress = easeOutQuart(progress);
+                const current = Math.floor(easedProgress * target);
+
+                counter.innerText = '$' + current.toLocaleString();
+
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
                 } else {
-                    counter.innerText = '$' + current.toLocaleString();
-                    requestAnimationFrame(step); // Use requestAnimationFrame for smoother animation
+                    counter.innerText = '$' + target.toLocaleString();
                 }
             };
-            requestAnimationFrame(step);
+
+            requestAnimationFrame(updateCounter);
             observer.unobserve(counter);
         }, { threshold: 0.5 });
         counterObserver.observe(counter);
@@ -100,13 +131,115 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 7. Hero Parallax Effect ---
+    // --- 7. Enhanced Hero Parallax Effect ---
     const heroBackground = document.querySelector('.hero-background');
-    if(heroBackground) {
+    if (heroBackground) {
+        let ticking = false;
+
         window.addEventListener('scroll', () => {
-            const scrollValue = window.scrollY;
-            // The 0.3 factor determines how fast the parallax effect is. Lower is slower.
-            heroBackground.style.transform = `translateY(${scrollValue * 0.3}px)`;
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const scrollValue = window.scrollY;
+                    heroBackground.style.transform = `translateY(${scrollValue * 0.5}px)`;
+                    ticking = false;
+                });
+                ticking = true;
+            }
         });
     }
+
+    // --- 8. Smooth Scroll for Navigation Links ---
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                const headerOffset = 80;
+                const elementPosition = target.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // --- 9. Card Tilt Effect (Subtle 3D) ---
+    const cards = document.querySelectorAll('.ride-card, .news-card');
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = (y - centerY) / 20;
+            const rotateY = (centerX - x) / 20;
+
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-15px)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+        });
+    });
+
+    // --- 10. Lazy Loading for Images ---
+    const images = document.querySelectorAll('img[src]');
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.style.opacity = '0';
+                img.style.transition = 'opacity 0.5s ease';
+
+                img.onload = () => {
+                    img.style.opacity = '1';
+                };
+
+                observer.unobserve(img);
+            }
+        });
+    });
+
+    images.forEach(img => imageObserver.observe(img));
+
+    // --- 11. Add Magnetic Effect to Buttons ---
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(button => {
+        button.addEventListener('mousemove', (e) => {
+            const rect = button.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+
+            button.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px) translateY(-4px) scale(1.02)`;
+        });
+
+        button.addEventListener('mouseleave', () => {
+            button.style.transform = '';
+        });
+    });
+
+    // --- 12. Add Progress Bar on Scroll ---
+    const progressBar = document.createElement('div');
+    progressBar.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--accent-yellow), var(--primary-red));
+        z-index: 9999;
+        transition: width 0.1s ease;
+    `;
+    document.body.appendChild(progressBar);
+
+    window.addEventListener('scroll', () => {
+        const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (window.scrollY / windowHeight) * 100;
+        progressBar.style.width = scrolled + '%';
+    });
 });
