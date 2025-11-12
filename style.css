@@ -656,6 +656,136 @@ body.no-scroll { overflow: hidden; }
 .modal h2 { font-family: var(--font-heading); font-size: 2.5rem; margin-bottom: 15px; }
 .modal p { margin-bottom: 10px; }
 
+/* --- 9. Call to Action Section --- */
+.cta-section {
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.98) 0%, rgba(51, 51, 51, 0.95) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 50%, rgba(235, 88, 59, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 50%, rgba(255, 184, 0, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.cta-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+.cta-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.cta-subtitle {
+    font-size: 1.3rem;
+    color: #cccccc;
+    margin-bottom: 60px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
+
+.cta-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-top: 50px;
+}
+
+.cta-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 50px 30px;
+    text-align: center;
+    transition: all 0.4s var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-red), var(--accent-yellow));
+    transform: scaleX(0);
+    transition: transform 0.5s var(--transition-smooth);
+}
+
+.cta-card:hover::before {
+    transform: scaleX(1);
+}
+
+.cta-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 184, 0, 0.3);
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba(255, 184, 0, 0.1);
+}
+
+.cta-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 30px;
+    background: linear-gradient(135deg, var(--primary-red), var(--accent-yellow));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: var(--white);
+    transition: all 0.4s var(--transition-smooth);
+}
+
+.cta-card:hover .cta-icon {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 10px 30px rgba(235, 88, 59, 0.4);
+}
+
+.cta-card h3 {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    color: var(--white);
+}
+
+.cta-card p {
+    color: #cccccc;
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 30px;
+    min-height: 60px;
+}
+
+.cta-card .btn {
+    margin-top: auto;
+}
+
 /* --- 10. Responsive Design --- */
 
 /* Tablet - 769px to 992px */
@@ -666,6 +796,13 @@ body.no-scroll { overflow: hidden; }
     }
     .news-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+    .cta-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
@@ -729,6 +866,21 @@ body.no-scroll { overflow: hidden; }
     /* Contact Form */
     .contact-form .btn {
         width: 100%;
+    }
+
+    /* CTA Section */
+    .cta-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    .cta-title {
+        font-size: 2.5rem;
+    }
+    .cta-subtitle {
+        font-size: 1.1rem;
+    }
+    .cta-card {
+        padding: 40px 25px;
     }
 }
         
