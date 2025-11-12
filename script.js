@@ -189,37 +189,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- 10. Lazy Loading for Images ---
-    const images = document.querySelectorAll('img[src]');
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-
-                // Don't set opacity initially - let CSS handle it
-                if (img.complete) {
-                    // Image already loaded
-                    img.style.opacity = '1';
-                } else {
-                    img.style.opacity = '0';
-                    img.style.transition = 'opacity 0.5s ease';
-
-                    img.onload = () => {
-                        img.style.opacity = '1';
-                    };
-
-                    img.onerror = () => {
-                        // If image fails to load, still show it (browser will show broken image icon)
-                        img.style.opacity = '1';
-                        console.error('Failed to load image:', img.src);
-                    };
+    const lazyImages = document.querySelectorAll('img[data-src]');
+    if (lazyImages.length > 0) {
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    if (img.dataset.src) {
+                        img.src = img.dataset.src;
+                        img.removeAttribute('data-src');
+                    }
+                    observer.unobserve(img);
                 }
+            });
+        }, { rootMargin: '50px' });
 
-                observer.unobserve(img);
-            }
-        });
-    });
-
-    images.forEach(img => imageObserver.observe(img));
+        lazyImages.forEach(img => imageObserver.observe(img));
+    }
 
     // --- 11. Add Magnetic Effect to Buttons (excluding ride card buttons) ---
     const buttons = document.querySelectorAll('.btn:not(.ride-card .btn)');
