@@ -194,12 +194,25 @@ document.addEventListener('DOMContentLoaded', () => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const img = entry.target;
-                img.style.opacity = '0';
-                img.style.transition = 'opacity 0.5s ease';
 
-                img.onload = () => {
+                // Don't set opacity initially - let CSS handle it
+                if (img.complete) {
+                    // Image already loaded
                     img.style.opacity = '1';
-                };
+                } else {
+                    img.style.opacity = '0';
+                    img.style.transition = 'opacity 0.5s ease';
+
+                    img.onload = () => {
+                        img.style.opacity = '1';
+                    };
+
+                    img.onerror = () => {
+                        // If image fails to load, still show it (browser will show broken image icon)
+                        img.style.opacity = '1';
+                        console.error('Failed to load image:', img.src);
+                    };
+                }
 
                 observer.unobserve(img);
             }
@@ -208,8 +221,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     images.forEach(img => imageObserver.observe(img));
 
-    // --- 11. Add Magnetic Effect to Buttons ---
-    const buttons = document.querySelectorAll('.btn');
+    // --- 11. Add Magnetic Effect to Buttons (excluding ride card buttons) ---
+    const buttons = document.querySelectorAll('.btn:not(.ride-card .btn)');
     buttons.forEach(button => {
         button.addEventListener('mousemove', (e) => {
             const rect = button.getBoundingClientRect();
@@ -242,4 +255,59 @@ document.addEventListener('DOMContentLoaded', () => {
         const scrolled = (window.scrollY / windowHeight) * 100;
         progressBar.style.width = scrolled + '%';
     });
+
+    // --- 13. Contact Form Handler ---
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Get form data
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+            };
+
+            // Create success message
+            const successMessage = document.createElement('div');
+            successMessage.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, var(--accent-yellow), #ffed4e);
+                color: var(--dark-bg);
+                padding: 30px 50px;
+                border-radius: 12px;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                z-index: 10000;
+                font-size: 1.2rem;
+                font-weight: 700;
+                text-align: center;
+                animation: fadeInUp 0.5s ease;
+            `;
+            successMessage.innerHTML = `
+                <i class="fas fa-check-circle" style="font-size: 3rem; color: var(--primary-red); margin-bottom: 15px; display: block;"></i>
+                Thank you for your message!<br>
+                <span style="font-size: 0.9rem; font-weight: 400;">We'll get back to you soon.</span>
+            `;
+
+            document.body.appendChild(successMessage);
+
+            // Reset form
+            contactForm.reset();
+
+            // Remove message after 3 seconds
+            setTimeout(() => {
+                successMessage.style.opacity = '0';
+                successMessage.style.transform = 'translate(-50%, -50%) scale(0.8)';
+                setTimeout(() => successMessage.remove(), 300);
+            }, 3000);
+
+            // Log form data (in production, you'd send this to a server)
+            console.log('Form submitted:', formData);
+        });
+    }
 });
