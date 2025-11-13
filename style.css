@@ -658,7 +658,10 @@ body.no-scroll { overflow: hidden; }
 
 /* --- 9. Call to Action Section --- */
 .cta-section {
-    background: linear-gradient(135deg, rgba(26, 26, 26, 0.98) 0%, rgba(51, 51, 51, 0.95) 100%);
+    background-image: url('images/Header_Global.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     position: relative;
     overflow: hidden;
 }
@@ -671,8 +674,9 @@ body.no-scroll { overflow: hidden; }
     right: 0;
     bottom: 0;
     background:
-        radial-gradient(circle at 20% 50%, rgba(235, 88, 59, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 50%, rgba(255, 184, 0, 0.1) 0%, transparent 50%);
+        linear-gradient(135deg, rgba(26, 26, 26, 0.92) 0%, rgba(51, 51, 51, 0.88) 100%),
+        radial-gradient(circle at 20% 50%, rgba(235, 88, 59, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 50%, rgba(255, 184, 0, 0.15) 0%, transparent 50%);
     pointer-events: none;
 }
 
